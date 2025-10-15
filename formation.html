@@ -1,0 +1,129 @@
+<!doctype html>
+
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Catalogue de formations — PDF</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* petites personnalisations */
+    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <header class="bg-white border-b py-6">
+    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-extrabold">Catalogue de Formations Rivaldo</h1>
+        <p class="text-sm text-slate-500">Consulte et télécharge facilement toutes mes formations PDF. Les fichiers sont hébergés dans le dossier <code>/pdf/</code>.</p>
+      </div>
+      <div class="text-right">
+        <span id="lastUpdated" class="text-sm text-slate-500">Dernière mise à jour : —</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10">
+    <div class="flex gap-4 items-center mb-6">
+      <input id="search" type="search" placeholder="Chercher une formation..." class="flex-1 border rounded-lg px-4 py-2" />
+      <select id="sort" class="border rounded-lg px-3 py-2">
+        <option value="new">Trier : du plus récent</option>
+        <option value="old">Trier : du plus ancien</option>
+        <option value="alpha">Trier : par ordre alphabétique</option>
+      </select>
+    </div>
+
+    <section id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></section>
+
+    <div class="mt-10 text-center text-sm text-slate-500">
+      <p>Les nouvelles mise à jour de formations sont uploadées en PDF sur ce site. <code>/fichiers pdf/</code> Ce site est mise à jour localement par l'administrateur.</p>
+    </div>
+  </main>
+
+  <footer class="text-center text-xs text-slate-500 py-6">
+    © <span id="year"></span> Rivaldo — Catalogue de Formations PDF
+  </footer>
+
+  <script>
+    // ---------- Données des formations ----------
+    const coursesData = [
+      {
+        "id": "f001",
+        "title": "Formation : Marketing de Réseautage",
+        "description": "Guide complet pour débuter dans le marketing de réseau avec des exemples pratiques.",
+        "file": "pdf/marketing_reseautage.pdf",
+        "thumbnail": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder",
+        "updated": "2025-10-10"
+      },
+      {
+        "id": "f002",
+        "title": "Formation : Montage Vidéo Rapide",
+        "description": "Techniques essentielles pour créer des vidéos professionnelles avec des logiciels gratuits.",
+        "file": "pdf/montage_video.pdf",
+        "thumbnail": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder",
+        "updated": "2025-09-21"
+      },
+    ];
+
+    // Affichage du grid
+    function renderGrid(data) {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+
+      data.forEach(item => {
+        const encodedFile = encodeURI(item.file);
+
+        const card = document.createElement('article');
+        card.className = 'bg-white rounded-lg overflow-hidden border card-hover';
+        card.innerHTML = `
+          <img src="${item.thumbnail || 'https://via.placeholder.com/800x450'}" alt="${escapeHtml(item.title)}" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">${escapeHtml(item.title)}</h3>
+            <p class="text-sm text-slate-600 mt-2 line-clamp-3">${escapeHtml(item.description || '')}</p>
+            <div class="mt-4 flex items-center justify-between">
+              <div class="text-xs text-slate-500">Mis à jour : ${item.updated || '—'}</div>
+              <div class="flex gap-2">
+                <a href="${encodedFile}" target="_blank" rel="noopener" class="px-3 py-1 rounded text-sm border">Voir</a>
+                <a href="${encodedFile}" download class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Télécharger</a>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Recherche + tri
+    function filterAndRender() {
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const sort = document.getElementById('sort').value;
+      let filtered = coursesData.filter(c => (c.title + ' ' + (c.description||'')).toLowerCase().includes(q));
+
+      if (sort === 'new') filtered.sort((a,b) => (b.updated || '').localeCompare(a.updated || ''));
+      if (sort === 'old') filtered.sort((a,b) => (a.updated || '').localeCompare(b.updated || ''));
+      if (sort === 'alpha') filtered.sort((a,b) => a.title.localeCompare(b.title));
+
+      renderGrid(filtered);
+    }
+
+    document.getElementById('search').addEventListener('input', filterAndRender);
+    document.getElementById('sort').addEventListener('change', filterAndRender);
+
+    // Date de dernière mise à jour
+    function updateLastUpdated(data) {
+      const dates = data.map(d => d.updated).filter(Boolean).sort();
+      const last = dates.length ? dates[dates.length-1] : null;
+      document.getElementById('lastUpdated').textContent = last ? 'Dernière mise à jour : ${last}' : 'Dernière mise à jour : —';
+    }
+
+    // util
+    function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+    // Initialisation
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderGrid(coursesData);
+    updateLastUpdated(coursesData);
+  </script>
+</body>
+</html>
