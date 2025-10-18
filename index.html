@@ -1,3 +1,4 @@
+
 <!doctype html>
 
 <html lang="fr">
@@ -58,12 +59,12 @@
       },
       {
         "id": "f002",
-        "title": "Formation : Programation",
-        "description": "Accédez ici à des formations de langagede programmation gratuites.",
-        "file": "F006014.pdf",
-        "thumbnail": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder",
-        "updated": "2025-09-21"
-      },
+        "title": "Formation : Programmation",
+        "description": "Accédez ici à des formations de langages de programmation gratuites.",
+        "thumbnail": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop",
+        "updated": "2025-09-21",
+        "link": "programmation.html" // ← lien vers la nouvelle page
+      }
     ];
 
     // Affichage du grid
@@ -84,7 +85,9 @@
             <div class="mt-4 flex items-center justify-between">
               <div class="text-xs text-slate-500">Mis à jour : ${item.updated || '—'}</div>
               <div class="flex gap-2">
-                <a href="${encodedFile}" target="_blank" rel="noopener" class="px-3 py-1 rounded text-sm border">Voir</a>
+                ${item.link 
+                ? `<a href="${item.link}" class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Ouvrir</a>`
+                : `<a href="${encodedFile}" target="_blank" rel="noopener" class="px-3 py-1 rounded text-sm border">Voir</a>`}
                 <a href="${encodedFile}" download class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Télécharger</a>
               </div>
             </div>
