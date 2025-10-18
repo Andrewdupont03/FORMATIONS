@@ -1,6 +1,4 @@
-
 <!doctype html>
-
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
@@ -8,7 +6,6 @@
   <title>Catalogue de formations — PDF</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* petites personnalisations */
     .card-hover:hover { transform: translateY(-6px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
   </style>
 </head>
@@ -47,12 +44,11 @@
   </footer>
 
   <script>
-    // ---------- Données des formations ----------
     const coursesData = [
       {
         "id": "f001",
         "title": "Mise à Jour De La Formation : Marketing TRENDSTAR.",
-        "description": " Dernier mise à jour Guide complet pour débuter dans le marketing de réseau TRENDSTAR.",
+        "description": "Dernier mise à jour Guide complet pour débuter dans le marketing de réseau TRENDSTAR.",
         "file": "Stratégie_de_réseautage_TRENDSTAR.pdf",
         "thumbnail": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder",
         "updated": "2025-10-10"
@@ -63,18 +59,19 @@
         "description": "Accédez ici à des formations de langages de programmation gratuites.",
         "thumbnail": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop",
         "updated": "2025-09-21",
-        "link": "programmation.html" // ← lien vers la nouvelle page
+        "link": "programmation.html",
+        "zip": "formation-pogrammation.zip"  <!-- ZIP corrigé -->
       }
     ];
 
-    // Affichage du grid
+    function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
     function renderGrid(data) {
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
 
       data.forEach(item => {
         const encodedFile = encodeURI(item.file);
-
         const card = document.createElement('article');
         card.className = 'bg-white rounded-lg overflow-hidden border card-hover';
         card.innerHTML = `
@@ -86,9 +83,11 @@
               <div class="text-xs text-slate-500">Mis à jour : ${item.updated || '—'}</div>
               <div class="flex gap-2">
                 ${item.link 
-                ? `<a href="${item.link}" class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Ouvrir</a>`
-                : `<a href="${encodedFile}" target="_blank" rel="noopener" class="px-3 py-1 rounded text-sm border">Voir</a>`}
-                <a href="${encodedFile}" download class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Télécharger</a>
+                  ? `<a href="${item.link}" class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Ouvrir</a>` 
+                  : `<a href="${encodedFile}" target="_blank" rel="noopener" class="px-3 py-1 rounded text-sm border">Voir</a>`}
+                ${item.zip 
+                  ? `<button onclick="confirmDownload('${item.zip}')" class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Télécharger tout</button>`
+                  : `<a href='${encodedFile}' download class='px-3 py-1 rounded text-sm bg-indigo-600 text-white'>Télécharger</a>`}
               </div>
             </div>
           </div>
@@ -97,14 +96,13 @@
       });
     }
 
-    // Recherche + tri
     function filterAndRender() {
       const q = document.getElementById('search').value.trim().toLowerCase();
       const sort = document.getElementById('sort').value;
       let filtered = coursesData.filter(c => (c.title + ' ' + (c.description||'')).toLowerCase().includes(q));
 
-      if (sort === 'new') filtered.sort((a,b) => (b.updated || '').localeCompare(a.updated || ''));
-      if (sort === 'old') filtered.sort((a,b) => (a.updated || '').localeCompare(b.updated || ''));
+      if (sort === 'new') filtered.sort((a,b) => (b.updated||'').localeCompare(a.updated||''));
+      if (sort === 'old') filtered.sort((a,b) => (a.updated||'').localeCompare(b.updated||''));
       if (sort === 'alpha') filtered.sort((a,b) => a.title.localeCompare(b.title));
 
       renderGrid(filtered);
@@ -113,21 +111,78 @@
     document.getElementById('search').addEventListener('input', filterAndRender);
     document.getElementById('sort').addEventListener('change', filterAndRender);
 
-    // Date de dernière mise à jour
     function updateLastUpdated(data) {
       const dates = data.map(d => d.updated).filter(Boolean).sort();
       const last = dates.length ? dates[dates.length-1] : null;
       document.getElementById('lastUpdated').textContent = last ? `Dernière mise à jour : ${last}` : 'Dernière mise à jour : —';
     }
 
-    // util
-    function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-    // Initialisation
     document.getElementById('year').textContent = new Date().getFullYear();
     renderGrid(coursesData);
     updateLastUpdated(coursesData);
+
+    // Fonction confirmation Télécharger tout
+    function confirmDownload(zipPath) {
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(0,0,0,0)';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = '9999';
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.3s ease';
+
+      const box = document.createElement('div');
+      box.style.background = 'white';
+      box.style.padding = '20px';
+      box.style.borderRadius = '10px';
+      box.style.width = '90%';
+      box.style.maxWidth = '400px';
+      box.style.textAlign = 'center';
+      box.style.transform = 'translateY(-50px) scale(0.7)';
+      box.style.transition = 'transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+
+      box.innerHTML = `
+        <h3 style="margin-bottom: 10px; font-weight: bold;">Confirmation</h3>
+        <p>Voulez-vous télécharger tous les documents de cette section ?</p>
+        <div style="margin-top: 15px;">
+          <button id="confirmBtn" style="background-color: #2563eb; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Confirmer</button>
+          <button id="cancelBtn" style="background-color: #ccc; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer;">Annuler</button>
+        </div>
+      `;
+
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+
+      requestAnimationFrame(() => {
+        overlay.style.opacity = '1';
+        box.style.transform = 'translateY(0) scale(1)';
+        overlay.style.background = 'rgba(0,0,0,0.6)';
+      });
+
+      function closeOverlay() {
+        box.style.transform = 'translateY(-50px) scale(0.7)';
+        overlay.style.opacity = '0';
+        setTimeout(() => document.body.removeChild(overlay), 500);
+      }
+
+      document.getElementById('confirmBtn').onclick = () => {
+        const link = document.createElement('a');
+        link.href = zipPath;
+        link.download = '';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        closeOverlay();
+      };
+
+      document.getElementById('cancelBtn').onclick = closeOverlay;
+    }
   </script>
 </body>
-
 </html>
