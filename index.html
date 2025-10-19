@@ -86,7 +86,7 @@
                   ? `<a href="${item.link}" class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Ouvrir</a>` 
                   : `<a href="${encodedFile}" target="_blank" rel="noopener" class="px-3 py-1 rounded text-sm border">Voir</a>`}
                 ${item.zip 
-                  ? `<button onclick="confirmDownload('${item.zip}')" class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Télécharger tout</button>`
+                  ? `<button onclick="confirmDownload('${item.zip}')" class="px-3 py-1 rounded text-sm bg-indigo-600 text-white">Télécharger</button>`
                   : `<a href='${encodedFile}' download class='px-3 py-1 rounded text-sm bg-indigo-600 text-white'>Télécharger</a>`}
               </div>
             </div>
@@ -186,3 +186,4 @@
   </script>
 </body>
 </html>
+
