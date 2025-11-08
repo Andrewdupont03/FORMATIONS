@@ -54,7 +54,7 @@
   </footer>
 
   <script>
-    // Données des sous-formations
+    // Données des sous-formations avec titres et descriptions personnalisés
     const coursesData = [
       {
         "id": "p001",
@@ -87,6 +87,70 @@
         "file": "F006014.pdf",
         "thumbnail": "https://images.unsplash.com/photo-1629904853716-f0bc54eea481?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1170",
         "updated": "2025-09-30"
+      },
+      {
+        "id": "p005",
+        "title": "Automatisation avec Python",
+        "description": "Apprends à automatiser des tâches répétitives avec Python pour gagner du temps et améliorer ton workflow.",
+        "file": "cours-python.pdf",
+        "thumbnail": "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1632",
+        "updated": "2025-10-01"
+      },
+      {
+        "id": "p006",
+        "title": "Découverte de Ruby",
+        "description": "Introduction au langage Ruby et ses applications dans le développement web moderne.",
+        "file": "une-introduction-a-ruby.pdf",
+        "thumbnail": "https://plus.unsplash.com/premium_photo-1678565879444-f87c8bd9f241?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740",
+        "updated": "2025-10-02"
+      },
+      {
+        "id": "p007",
+        "title": "HTML & CSS Avancé",
+        "description": "Perfectionne tes compétences en HTML et CSS avec des projets pratiques et des techniques avancées.",
+        "file": "the-complete-reference-html-css-fifth-edition.pdf",
+        "thumbnail": "https://plus.unsplash.com/premium_photo-1723568505998-3643abcdc260?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1604",
+        "updated": "2025-10-03"
+      },
+      {
+        "id": "p008",
+        "title": "Initiation à Unix et Bash",
+        "description": "Apprends à utiliser le terminal Unix et à écrire des scripts Bash pour automatiser tes tâches.",
+        "file": "Initiation.a.Unix.pdf",
+        "thumbnail": "https://plus.unsplash.com/premium_photo-1683309565422-77818a287060?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740",
+        "updated": "2025-10-04"
+      },
+      {
+        "id": "p009",
+        "title": "Programmation en C++",
+        "description": "Comprends les concepts fondamentaux de la programmation orientée objet en C++ et construis des projets simples.",
+        "file": "C++.pdf",
+        "thumbnail": "https://plus.unsplash.com/premium_photo-1668902223894-053948883caa?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1760",
+        "updated": "2025-10-05"
+      },
+      {
+        "id": "p010",
+        "title": "Programmation en C moderne",
+        "description": "Découvre les bonnes pratiques et les nouveautés du langage C moderne pour des applications performantes.",
+        "file": "la-programmation-en-c-moderne.pdf",
+        "thumbnail": "https://plus.unsplash.com/premium_photo-1668902221464-402993a500ce?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1760",
+        "updated": "2025-10-06"
+      },
+      {
+        "id": "p011",
+        "title": "PHP Avancé et Frameworks",
+        "description": "Approfondis tes connaissances en PHP et découvre l’utilisation des frameworks pour créer des applications web robustes.",
+        "file": "FastPHP.pdf",
+        "thumbnail": "https://plus.unsplash.com/premium_photo-1661764393655-1dbffee8c0ce?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740",
+        "updated": "2025-10-07"
+      },
+      {
+        "id": "p012",
+        "title": "Java Orienté Objet",
+        "description": "Apprends la programmation orientée objet en Java et la création de projets structurés et modulaires.",
+        "file": "java.pdf",
+        "thumbnail": "https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1632",
+        "updated": "2025-10-08"
       }
     ];
 
@@ -121,11 +185,9 @@
       const q = document.getElementById('search').value.trim().toLowerCase();
       const sort = document.getElementById('sort').value;
       let filtered = coursesData.filter(c => (c.title + ' ' + (c.description||'')).toLowerCase().includes(q));
-
       if (sort === 'new') filtered.sort((a,b) => (b.updated||'').localeCompare(a.updated||''));
       if (sort === 'old') filtered.sort((a,b) => (a.updated||'').localeCompare(b.updated||''));
       if (sort === 'alpha') filtered.sort((a,b) => a.title.localeCompare(b.title));
-
       renderGrid(filtered);
     }
 
@@ -139,14 +201,11 @@
       document.getElementById('lastUpdated').textContent = last ? `Dernière mise à jour : ${last}` : 'Dernière mise à jour : —';
     }
 
-    // Initialisation
     document.getElementById('year').textContent = new Date().getFullYear();
     renderGrid(coursesData);
     updateLastUpdated(coursesData);
-  </script>
 
-  <!-- Confirmation pour télécharger tout -->
-  <script>
+    // Confirmation pour télécharger tout
     function confirmDownload(zipPath) {
       const overlay = document.createElement('div');
       overlay.style.position = 'fixed';
@@ -212,4 +271,3 @@
 
 </body>
 </html>
-
